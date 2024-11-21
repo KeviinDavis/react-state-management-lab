@@ -1,12 +1,13 @@
 // src/App.jsx
 import React, { useState } from 'react';
 
-
 const App = () => {
-const [team, setTeam] = useState([]);
-const [money, setMoney] = useState(100);
-const [zombieFighters, setZombieFighters] = useState([
-  
+  const [team, setTeam] = useState([]);
+  const [money, setMoney] = useState(100);
+  const [totalStrength, setTotalStrength] = useState(0);
+  const [totalAgility, setTotalAgility] = useState(0);
+
+  const [zombieFighters, setZombieFighters] = useState([
     {
       name: 'Survivor',
       price: 12,
@@ -77,27 +78,67 @@ const [zombieFighters, setZombieFighters] = useState([
       agility: 6,
       img: 'https://via.placeholder.com/150/602b9e',
     },
-]);
+  ]);
 
-
-
+  const handleAddFighter = (fighter) => {
+    if (money >= fighter.price) {
+      setTeam([...team, fighter]);
+      setMoney(money - fighter.price);
+  
+      // Update team stats
+      setTotalStrength(totalStrength + fighter.strength);
+      setTotalAgility(totalAgility + fighter.agility);
+    } else {
+      console.log('Not enough money');
+    }
+  };
+  
 
   return (
-<div>
-  <h1>Zombie Survival Team</h1>
-  <ul>
-    {zombieFighters.map((fighter) => (
-      <li key={fighter.name}>
-        <img src={fighter.img} alt={fighter.name} />
-        <p>Name: {fighter.name}</p>
-        <p>Price: {fighter.price}</p>
-        <p>Strength: {fighter.strength}</p>
-        <p>Agility: {fighter.agility}</p>
-        <button></button>
-      </li>
-    ))}
-  </ul>
-</div>
+    <div>
+      <h1>Zombie Survival Team</h1>
+      <h2>Money: ${money}</h2> {/* Display money once */}
+      
+      {/* Zombie Fighters */}
+      <ul>
+        {zombieFighters.map((fighter) => (
+          <li key={fighter.name}>
+            <img src={fighter.img} alt={fighter.name} />
+            <p>Name: {fighter.name}</p>
+            <p>Price: {fighter.price}</p>
+            <p>Strength: {fighter.strength}</p>
+            <p>Agility: {fighter.agility}</p>
+            <button onClick={() => handleAddFighter(fighter)}>Add</button>
+          </li>
+        ))}
+      </ul>
+
+      {/* Team Display */}
+      <div>
+        <h2>Your Team</h2>
+        {team.length === 0 ? (
+          <p>Pick some fighters for your team!</p>
+        ) : (
+          <ul>
+            {team.map((member) => (
+              <li key={member.name}>
+                <img src={member.img} alt={member.name} />
+                <p>Name: {member.name}</p>
+                <p>Price: {member.price}</p>
+                <p>Strength: {member.strength}</p>
+                <p>Agility: {member.agility}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div>
+        <h2>Team Stats</h2>
+        <p>Total Strength: {totalStrength}</p>
+        <p>Total Agility: {totalAgility}</p>
+      </div>
+    </div>
   );
 };
 
